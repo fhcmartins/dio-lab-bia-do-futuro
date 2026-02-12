@@ -27,7 +27,8 @@ O agente atua através da Análise Contextual e Antecipação. Em vez de esperar
 ## Persona e Tom de Voz
 
 ### Nome do Agente
-[Lúmi]
+
+> Lúmi
 
 ### Personalidade
 > Como o agente se comporta? (ex: consultivo, direto, educativo)
