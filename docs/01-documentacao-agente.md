@@ -132,7 +132,7 @@ graph TD
 - [ ] [ex: Quando não sabe, admite e redireciona]
 - [ ] [ex: Não faz recomendações de investimento sem perfil do cliente]
 
-O agente opera sob o princípio da Veracidade Estrita. Isso significa que a base de conhecimento (`data/`) é a única fonte da verdade.
+O agente opera sob o princípio da Veracidade Estrita. Isso significa que a base de conhecimento (data/) é a única fonte da verdade.
 
 **1. Diretrizes de Confiabilidade**
 
