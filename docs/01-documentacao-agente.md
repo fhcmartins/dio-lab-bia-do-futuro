@@ -71,26 +71,55 @@ O tom de voz deve ser Sóbrio, Seguro e Empático.
 
 ## Arquitetura
 
+O fluxo de dados segue o modelo de "Cadeia de Raciocínio" (Chain of Thought), onde a IA atua como um orquestrador entre o usuário e a base de conhecimento.
+
+O Fluxo do Processo:
+* **1. Input**: O usuário envia uma pergunta pelo chat (Streamlit).
+
+* **2. Análise de Intenção**: O Orquestrador (LangChain/Python) decide quais dados precisa buscar.
+
+* **3. Recuperação (Retrieval)**: O sistema consulta os arquivos .csv e .json.
+
+* **4. Aumento (Augmentation)**: O prompt do sistema é montado: Instruções da Persona + Dados Recuperados + Pergunta do Usuário.
+
+* **5. Geração (Generation)**: O LLM (Gemini/GPT) gera a resposta baseada exclusivamente nesse pacote.
+
+* **6. Output**: A resposta segura é exibida ao usuário.
+
 ### Diagrama
 
 ```mermaid
-flowchart TD
-    A[Cliente] -->|Mensagem| B[Interface]
-    B --> C[LLM]
-    C --> D[Base de Conhecimento]
-    D --> C
-    C --> E[Validação]
-    E --> F[Resposta]
+graph TD
+    A[Usuário] -->|Pergunta| B(Interface Streamlit)
+    B --> C{Orquestrador Python}
+    
+    subgraph Base de Conhecimento
+        D[(Transações CSV)]
+        E[(Perfil JSON)]
+        F[(Produtos JSON)]
+    end
+    
+    C --> D
+    C --> E
+    C --> F
+    
+    D & E & F -->|Dados Contextuais| G[Prompt Engine]
+    G -->|Contexto + Pergunta| H[LLM - Inteligência Artificial]
+    H -->|Resposta Validada| B
+    B -->|Resposta Final| A
 ```
 
 ### Componentes
 
-| Componente | Descrição |
-|------------|-----------|
-| Interface | [ex: Chatbot em Streamlit] |
-| LLM | [ex: GPT-4 via API] |
-| Base de Conhecimento | [ex: JSON/CSV com dados do cliente] |
-| Validação | [ex: Checagem de alucinações] |
+ -----------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Componente           | Descrição                                                                                 | Tecnologia                                   |
+| ----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Interface            | Chatbot interativo para entrada de perguntas e exibição de insights proativos.            | [Streamlit](https://streamlit.io) (Python)   |
+| LLM Local            | Modelo de linguagem para processamento de linguagem natural sem saída de dados para nuvem.| Ollama (local)                               |
+| Orquestrador         | "Lógica de integração que lê arquivos, gerencia o histórico e conecta à LLM."             | LangChain ou Ollama Python Lib               |
+| Base de Conhecimento | Repositório de dados mockados com o histórico e perfil do cliente.                        | Arquivos JSON e CSV mockados na pasta `data` |
+| Validação            | Camada de segurança via System Prompt para garantir respostas baseadas apenas em fatos.   | Grounding (Ancoragem em dados)               |
+ -----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ---
 
@@ -103,7 +132,7 @@ flowchart TD
 - [ ] [ex: Quando não sabe, admite e redireciona]
 - [ ] [ex: Não faz recomendações de investimento sem perfil do cliente]
 
-O agente opera sob o princípio da Veracidade Estrita. Isso significa que a base de conhecimento (data/) é a única fonte da verdade.
+O agente opera sob o princípio da Veracidade Estrita. Isso significa que a base de conhecimento (`data/`) é a única fonte da verdade.
 
 **1. Diretrizes de Confiabilidade**
 
@@ -151,3 +180,10 @@ Para garantir que a personalidade se mantenha profissional, definimos estas "lin
 * **Não alucinar**: Se o usuário perguntar sobre o saldo de uma conta que não existe no transacoes.csv, o agente deve dizer: "Para sua segurança, só consigo visualizar as contas conectadas a este histórico. Não encontrei dados sobre essa conta específica."
 
 * **Não opinar fora da base**: Ele não dá dicas de "ações quentes do dia" ou previsões políticas, focando apenas nos dados fornecidos na base de conhecimento.
+<<<<<<< HEAD
+=======
+
+* **NÃO** acessa dados bancários sensíveis (como senhas, por exemplo)
+
+* **NÃO** substitui um profissionalcertifiado.
+>>>>>>> 6c52fba (Conclusão documentação do Agente)
